@@ -8,7 +8,7 @@ const Home = () => {
     return (
         <Grid container rowGap={2}>
             <Grid container justifyContent="center">
-                <img src="src\assets\SanMarcosLogo.png" alt="Logo San Marcos" width="100%"></img>
+                <img src="/SanMarcosLogo.png" alt="Logo San Marcos" width="100%"></img>
                 <Typography>Un celestial sabor picosito</Typography>
             </Grid>
             <Grid container justifyContent="center">
