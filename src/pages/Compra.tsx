@@ -16,7 +16,7 @@ const Compra = () => {
     ];
 
     return (
-        <Grid container rowGap={5} paddingX={2} paddingTop={2}>
+        <Grid container rowGap={5} paddingX={3} paddingTop={2}>
             <Header />
             <Grid container rowGap={2}>
                 <Typography>
@@ -52,15 +52,21 @@ const Compra = () => {
                     height={200}
                 />
             </Grid>
-            <Grid container rowGap={2}>
+            <Grid container rowGap={2} paddingX={2}>
                 <Typography>
                     Costo de inversión previsto:
                 </Typography>
                 <Paper
-                    sx={{ width: "100%", height: "100%" }}
+                    sx={{
+                        width: "100%",
+                        height: "100%",
+                        backgroundColor: "#181F34",
+                    }}
                 >
                     <Grid container justifyContent="center" alignContent="center" height="100%">
-                        <Typography>
+                        <Typography
+                            color={"#C6E7DE"}
+                        >
                             Costo de inversión total: $450
                         </Typography>
                     </Grid>
