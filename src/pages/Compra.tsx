@@ -16,7 +16,7 @@ const Compra = () => {
     ];
 
     return (
-        <Grid container rowGap={5} paddingX={3} paddingTop={2}>
+        <Grid container rowGap={5} paddingX={3} marginY={2}>
             <Header />
             <Grid container rowGap={2}>
                 <Typography>
