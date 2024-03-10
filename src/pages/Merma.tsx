@@ -21,7 +21,7 @@ const Merma = () => {
     ];
 
     return (
-        <Grid container rowGap={5} paddingX={3} marginY={2}>
+        <Grid container rowGap={5} marginX={3} marginY={2}>
             <Header />
             <Grid container rowGap={2}>
                 <Typography>
