@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Autocomplete, Box, Grid, Paper, TextField, Typography } from "@mui/material";
+import { Autocomplete, Grid, Paper, TextField, Typography } from "@mui/material";
 import { PieChart } from "@mui/x-charts";
 import Header from "../components/Header";
 import FetchCSVData from "../helpers/FetchData";
@@ -78,7 +78,7 @@ const Compra = () => {
                     <Grid item xs={5.5}>
                         <Autocomplete
                             value={year}
-                            onChange={(e, value) => { setYear(value), setMonth(null), setGraphData(null) }}
+                            onChange={(_e, value) => { setYear(value), setMonth(null), setGraphData(null) }}
                             options={years}
                             fullWidth
                             renderInput={(params) => <TextField {...params} label="Año" />}
@@ -87,7 +87,7 @@ const Compra = () => {
                     <Grid item xs={5.5}>
                         <Autocomplete
                             value={month}
-                            onChange={(e, value) => setMonth(value)}
+                            onChange={(_e, value) => setMonth(value)}
                             disabled={!year}
                             options={months}
                             fullWidth
