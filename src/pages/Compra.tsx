@@ -8,9 +8,12 @@ const years = ["2023", "2024"];
 
 const Compra = () => {
     const [data, setData] = useState<any>();
-    const [months, setMonths] = useState<string[]|null>(null);
+
+    const [months, setMonths] = useState<string[] | null>(null);
+
     const [year, setYear] = useState<any>(null);
     const [month, setMonth] = useState<any>(null);
+
     const [graphData, setGraphData] = useState<any>(null);
     const [total, setTotal] = useState<any>(0);
 
