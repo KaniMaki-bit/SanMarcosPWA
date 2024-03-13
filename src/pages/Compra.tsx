@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Autocomplete, Grid, Paper, TextField, Typography } from "@mui/material";
+import { FormControl, Grid, InputLabel, MenuItem, Paper, Select, Typography } from "@mui/material";
 import { PieChart } from "@mui/x-charts";
 import Header from "../components/Header";
 import FetchCSVData from "../helpers/FetchData";
@@ -8,7 +8,7 @@ const years = ["2023", "2024"];
 
 const Compra = () => {
     const [data, setData] = useState<any>();
-    const [months, setMonths] = useState<any>([]);
+    const [months, setMonths] = useState<string[]|null>(null);
     const [year, setYear] = useState<any>(null);
     const [month, setMonth] = useState<any>(null);
     const [graphData, setGraphData] = useState<any>(null);
@@ -76,23 +76,41 @@ const Compra = () => {
                 </Typography>
                 <Grid container justifyContent="space-between">
                     <Grid item xs={5.5}>
-                        <Autocomplete
-                            value={year}
-                            onChange={(_e, value) => { setYear(value), setMonth(null), setGraphData(null) }}
-                            options={years}
-                            fullWidth
-                            renderInput={(params) => <TextField {...params} label="Año" />}
-                        />
+                        <FormControl fullWidth>
+                            <InputLabel id="select-year-label">Año</InputLabel>
+                            <Select
+                                labelId="select-year-label"
+                                value={year}
+                                onChange={(e) => { setYear(e.target.value), setMonth(null), setGraphData(null) }}
+                                fullWidth
+                                label="Año"
+                            >
+                                {years.map((yearOption) => (
+                                    <MenuItem key={yearOption} value={yearOption}>
+                                        {yearOption}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
                     </Grid>
                     <Grid item xs={5.5}>
-                        <Autocomplete
-                            value={month}
-                            onChange={(_e, value) => setMonth(value)}
-                            disabled={!year}
-                            options={months}
-                            fullWidth
-                            renderInput={(params) => <TextField {...params} label="Mes" />}
-                        />
+                        <FormControl fullWidth>
+                            <InputLabel id="select-month-label">Mes</InputLabel>
+                            <Select
+                                labelId="select-month-label"
+                                value={month}
+                                onChange={(e) => setMonth(e.target.value)}
+                                disabled={!year}
+                                fullWidth
+                                label="Mes"
+                            >
+                                {months?.map((monthOption) => (
+                                    <MenuItem key={monthOption} value={monthOption}>
+                                        {monthOption}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
                     </Grid>
                 </Grid>
                 {
