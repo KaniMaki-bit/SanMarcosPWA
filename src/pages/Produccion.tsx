@@ -75,8 +75,8 @@ const Produccion = () => {
 
                 setGraphData(tempGraphData);
 
-                const sumatoria = Object.values(desgloce).reduce((total, valor) => total + (valor || 0), 0);
-                setTotal(sumatoria)
+                const sumatoria = Object.values(desgloce).reduce((total, valor) => total + (parseInt(valor) || 0), 0);
+                setTotal(sumatoria )
             } else if (year === "2025") {
                 const desgloce = {
                     "Enero": selected["ene-25"],
