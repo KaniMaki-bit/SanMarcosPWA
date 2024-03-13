@@ -13,9 +13,9 @@ const Merma = () => {
 
     const [months, setMonths] = useState<string[] | null>(null);
 
+    const [size, setSize] = useState<any>(null);
     const [year, setYear] = useState<any>(null);
     const [month, setMonth] = useState<any>(null);
-    const [size, setSize] = useState<any>(null);
 
     const [graphData, setGraphData] = useState<any>(null);
     const [dif, setDif] = useState<any>(0);
