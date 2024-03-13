@@ -1,72 +1,177 @@
-import { Autocomplete, Grid, Paper, TextField, Typography } from "@mui/material";
-import Header from "../components/Header";
+import { useEffect, useState } from "react";
+import { FormControl, Grid, InputLabel, MenuItem, Paper, Select, Typography } from "@mui/material";
 import { PieChart } from "@mui/x-charts";
+import Header from "../components/Header";
+import FetchCSVData from "../helpers/FetchData";
+
+const years = ["2024", "2025"];
 
 const Produccion = () => {
-    const clients = [
-        { label: "Cliente 1" },
-        { label: "Cliente 2" },
-        { label: "Cliente 3" }
-    ];
-    const years = [
-        { label: "2022" },
-        { label: "2023" },
-        { label: "2024" }
-    ];
-    const months = [
-        { label: "Enero" },
-        { label: "Febrero" },
-        { label: "Marzo" },
-        { label: "Abril" }
-    ];
+    const [data, setData] = useState<any>();
+
+    const [products, setProducts] = useState<any[] | null>(null);
+
+    const [product, setProduct] = useState<any>(null);
+    const [year, setYear] = useState<any>(null);
+
+    const [graphData, setGraphData] = useState<any>(null);
+    const [total, setTotal] = useState<any>(0);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const csvData = await FetchCSVData("Produccion");
+                setData(csvData);
+                console.log(csvData);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    useEffect(() => {
+        if (data) {
+            const tempProduct = data.map((line: any, index: number) => {
+                const productName = line["Descripción"];
+                if (productName) {
+                    return {
+                        name: productName,
+                        index: index
+                    };
+                } else {
+                    return null;
+                }
+            }).filter((product: any) => product !== null);
+
+            setProducts(tempProduct);
+
+        }
+    }, [data])
+
+    useEffect(() => {
+        if (year) {
+            const selected = data![product]
+
+            if (year === "2024") {
+                const desgloce = {
+                    "Febrero": selected["feb-24"],
+                    "Marzo": selected["mar-24"],
+                    "Abril": selected["abr-24"],
+                    "Mayo": selected["may-24"],
+                    "Junio": selected["jun-24"],
+                    "Julio": selected["jul-24"],
+                    "Agosto": selected["ago-24"],
+                    "Septiembre": selected["sep-24"],
+                    "Octubre": selected["oct-24"],
+                    "Noviembre": selected["nov-24"],
+                    "Diciembre": selected["dic-24"],
+                }
+
+                const tempGraphData = Object.entries(desgloce)
+                    .filter(([_mes, valor]) => valor !== 0 && valor !== null)
+                    .map(([mes, valor]) => ({ id: 0, value: valor, label: mes.substring(0, 3) }));
+
+                setGraphData(tempGraphData);
+
+                const sumatoria = Object.values(desgloce).reduce((total, valor) => total + (valor || 0), 0);
+                setTotal(sumatoria)
+            } else if (year === "2025") {
+                const desgloce = {
+                    "Enero": selected["ene-25"],
+                }
+
+                setGraphData([
+                    { id: 0, value: desgloce.Enero, label: 'Enero' }
+                ])
+
+                setTotal(desgloce.Enero)
+            }
+
+        }
+    }, [year])
 
     return (
-        <Grid container rowGap={5} marginX={3} marginY={2}>
+        <Grid container rowGap={5} paddingX={3} paddingY={2}>
             <Header />
             <Grid container rowGap={2}>
                 <Typography>
-                    Selecciona el cliente, año y mes para identificar el consumo de materia primera durante ese periodo.
+                    Selecciona el cliente y año para identificar el consumo de materia primera durante ese periodo.
                 </Typography>
                 <Grid container justifyContent="space-between">
-                    <Grid item xs={4}>
-                        <Autocomplete
-                            options={clients}
-                            fullWidth
-                            renderInput={(params) => <TextField {...params} label="Cliente" />}
-                        />
+                    <Grid item xs={5.5}>
+                        <FormControl fullWidth>
+                            <InputLabel id="select-product-label">Producto</InputLabel>
+                            <Select
+                                labelId="select-product-label"
+                                value={product}
+                                onChange={(e) => { setProduct(e.target.value), setYear(null), setGraphData(null) }}
+                                fullWidth
+                                label="Producto"
+                            >
+                                {products?.map((productOption: any) => (
+                                    <MenuItem key={productOption.index} value={productOption.index}>
+                                        {productOption.name}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
                     </Grid>
-                    <Grid item xs={3.5}>
-                        <Autocomplete
-                            options={years}
-                            fullWidth
-                            renderInput={(params) => <TextField {...params} label="Año" />}
-                        />
-                    </Grid>
-                    <Grid item xs={3.5}>
-                        <Autocomplete
-                            options={months}
-                            fullWidth
-                            renderInput={(params) => <TextField {...params} label="Mes" />}
-                        />
+                    <Grid item xs={5.5}>
+                        <FormControl fullWidth>
+                            <InputLabel id="select-year-label">Año</InputLabel>
+                            <Select
+                                labelId="select-year-label"
+                                value={year}
+                                onChange={(e) => { setYear(e.target.value) }}
+                                disabled={product === null}
+                                fullWidth
+                                label="Año"
+                            >
+                                {years.map((yearOption) => (
+                                    <MenuItem key={yearOption} value={yearOption}>
+                                        {yearOption}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
                     </Grid>
                 </Grid>
-                <PieChart
-                    series={[
-                        {
-                            data: [
-                                { id: 0, value: 10, label: 'series A' },
-                                { id: 1, value: 15, label: 'series B' },
-                                { id: 2, value: 20, label: 'series C' },
-                            ],
-                        },
-                    ]}
-                    width={325}
-                    height={200}
-                />
+                {
+                    graphData ? (
+                        <PieChart
+                            series={[
+                                {
+                                    data: graphData,
+                                },
+                            ]}
+                            width={325}
+                            height={year === "2025" ? 150 : 350}
+                        />
+                    ) : (
+                        <Grid
+                            width={365}
+                            height={200}
+                        >
+                            <Paper
+                                sx={{
+                                    width: "100%",
+                                    height: "100%",
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center"
+                                }}
+                            >
+                                <Typography>Selecciona un periodo</Typography>
+                            </Paper>
+                        </Grid>
+                    )
+                }
             </Grid>
             <Grid container rowGap={2} paddingX={2}>
                 <Typography>
-                    Inventario restante:
+                    Total en el año:
                 </Typography>
                 <Paper
                     sx={{
@@ -82,7 +187,7 @@ const Produccion = () => {
                                 textAlign: "justify",
                             }}
                         >
-                            Lista de productos restantes en contra de las ventas de cada cliente
+                            Toneladas {total}
                         </Typography>
                     </Grid>
                 </Paper>
@@ -90,5 +195,5 @@ const Produccion = () => {
         </Grid>
     );
 }
- 
+
 export default Produccion;

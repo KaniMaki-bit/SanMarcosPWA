@@ -69,18 +69,11 @@ const Venta = () => {
                     "Diciembre": selected.Diciembre
                 }
 
-                setGraphData([
-                    { id: 0, value: desgloce.Marzo, label: 'Mar' },
-                    { id: 0, value: desgloce.Abril, label: 'Abr' },
-                    { id: 0, value: desgloce.Mayo, label: 'May' },
-                    { id: 0, value: desgloce.Junio, label: 'Jun' },
-                    { id: 0, value: desgloce.Julio, label: 'Jul' },
-                    { id: 0, value: desgloce.Agosto, label: 'Ago' },
-                    { id: 0, value: desgloce.Septiembre, label: 'Sep' },
-                    { id: 0, value: desgloce.Octubre, label: 'Oct' },
-                    { id: 0, value: desgloce.Noviembre, label: 'Nov' },
-                    { id: 0, value: desgloce.Diciembre, label: 'Dic' },
-                ])
+                const tempGraphData = Object.entries(desgloce)
+                    .filter(([_mes, valor]) => valor !== 0 && valor !== null)
+                    .map(([mes, valor]) => ({ id: 0, value: valor, label: mes.substring(0, 3) }));
+
+                setGraphData(tempGraphData);
 
                 setTotal(selected[2023])
             } else if (year === "2024") {
@@ -91,12 +84,11 @@ const Venta = () => {
                     "Abril": selected.Abril24
                 }
 
-                setGraphData([
-                    { id: 0, value: desgloce.Enero, label: 'Enero' },
-                    { id: 0, value: desgloce.Febrero, label: 'Febrero' },
-                    { id: 0, value: desgloce.Marzo, label: 'Marzo' },
-                    { id: 0, value: desgloce.Abril, label: 'Abril' }
-                ])
+                const tempGraphData = Object.entries(desgloce)
+                    .filter(([_mes, valor]) => valor !== 0 && valor !== null)
+                    .map(([mes, valor]) => ({ id: 0, value: valor, label: mes.substring(0, 3) }));
+
+                setGraphData(tempGraphData);
 
                 setTotal(selected[2024])
             }
@@ -109,7 +101,7 @@ const Venta = () => {
             <Header />
             <Grid container rowGap={2}>
                 <Typography>
-                    Selecciona el cliente, año y mes para identificar el consumo de materia primera durante ese periodo.
+                    Selecciona el cliente y año para identificar el consumo de materia primera durante ese periodo.
                 </Typography>
                 <Grid container justifyContent="space-between">
                     <Grid item xs={5.5}>
